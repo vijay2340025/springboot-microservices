@@ -15,12 +15,12 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    @GetMapping("/product")
+    @GetMapping("/products")
     public ResponseEntity<List<Product>> getProducts() {
         return productService.getProducts();
     }
 
-    @GetMapping("/product/{id}")
+    @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Integer id) {
         return productService.getProductById(id);
     }
