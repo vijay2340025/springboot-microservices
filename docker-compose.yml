@@ -1,0 +1,30 @@
+services:
+  product-service:
+    build: "./product-service"
+    ports:
+      - "8081:8081"
+    networks:
+      - local-net
+    depends_on:
+      eureka-server:
+        condition: service_started
+    environment:
+      eureka.client.serviceUrl.defaultZone: "http://eureka-server:8761/eureka"
+#      SPRING_APPLICATION_JSON: '{"eureka":{"client":{"serviceUrl":{"defaultZone":"http://eureka-server:8761/eureka"}}}}'
+
+  eureka-server:
+    build: "./eureka-server"
+    ports:
+      - "8761:8761"
+    networks:
+      - local-net
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+networks:
+  local-net:
+    driver: bridge
+    name: backend
