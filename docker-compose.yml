@@ -1,6 +1,7 @@
 services:
   product-service:
     build: "./product-service"
+    container_name: product-service
     ports:
       - "8081:8081"
     networks:
@@ -10,10 +11,12 @@ services:
         condition: service_started
     environment:
       eureka.client.serviceUrl.defaultZone: "http://eureka-server:8761/eureka"
+      management.zipkin.tracing.endpoint: "http://zipkin:9411/api/v2/spans"
 #      SPRING_APPLICATION_JSON: '{"eureka":{"client":{"serviceUrl":{"defaultZone":"http://eureka-server:8761/eureka"}}}}'
 
   eureka-server:
     build: "./eureka-server"
+    container_name: eureka-server
     ports:
       - "8761:8761"
     networks:
@@ -23,6 +26,14 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - 9411:9411
+    networks:
+      - local-net
 
 networks:
   local-net:
